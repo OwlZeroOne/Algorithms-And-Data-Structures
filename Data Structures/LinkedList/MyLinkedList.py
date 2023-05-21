@@ -250,8 +250,61 @@ class LinkedList:
             return True
         
         return False
+    
+
+    def sort(self, order="asc"):
+        """
+        Sort the linked list using quick-sort algorithm. `sort()` will arrange list elements in ascending order by default, unless otherwise stated by `order="dec"`.
+        """
+        self.__quickSort()
 
 
+    def __quickSort(self):
+        # print("__quickSort()")
+        head = self.__head
+        tail = self.__tail
+        self.__quickSortRec(head, tail)
+        
+
+    def __quickSortRec(self, low: Node, high: Node):
+        # print("__quickSortRec()")
+
+        if high != None and low != high and low != high.next:
+            pivot = self.__partition(low, high)
+            self.__quickSortRec(low, pivot.previous)
+            self.__quickSortRec(pivot.next, high)
+
+
+    def __partition(self, low: Node, high: Node) -> Node:
+        # print("__partition()")
+
+        # set pivot to the last element
+        last = high.item
+
+        # set i to the previous node of low (similar to i = -1)
+        i = low.previous
+
+        j = low
+
+        while (j != high):
+            if j.item <= last:
+
+                i = low if i == None else i.next
+
+                temp = i.item
+                i.item = j.item
+                j.item = temp
+
+            j = j.next
+            
+
+        i = low if i == None else i.next
+        
+        temp = i.item
+        i.item = j.item
+        j.item = temp
+        
+        return i
 
 
 # ==================================================================================================
