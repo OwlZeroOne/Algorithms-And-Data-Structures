@@ -254,32 +254,33 @@ class LinkedList:
 
     def sort(self, order="asc"):
         """
-        Sort the linked list using quick-sort algorithm. `sort()` will arrange list elements in ascending order by default, unless otherwise stated by `order="dec"`.
+        Sort the linked list using quick-sort algorithm. `sort()` will arrange list elements in ascending order by default, unless otherwise stated by `order="dec"`.\n
+        For a list of strings, all strings will be arranged by their sizes.
         """
-        self.__quickSort()
+        self.__quickSort(order)
 
 
-    def __quickSort(self):
+    def __quickSort(self, order: str):
         # print("__quickSort()")
         head = self.__head
         tail = self.__tail
-        self.__quickSortRec(head, tail)
+        self.__quickSortRec(head, tail, order)
         
 
-    def __quickSortRec(self, low: Node, high: Node):
+    def __quickSortRec(self, low: Node, high: Node, order: str):
         # print("__quickSortRec()")
 
         if high != None and low != high and low != high.next:
-            pivot = self.__partition(low, high)
-            self.__quickSortRec(low, pivot.previous)
-            self.__quickSortRec(pivot.next, high)
+            pivot = self.__partition(low, high, order)
+            self.__quickSortRec(low, pivot.previous, order)
+            self.__quickSortRec(pivot.next, high, order)
 
 
-    def __partition(self, low: Node, high: Node) -> Node:
+    def __partition(self, low: Node, high: Node, order: str) -> Node:
         # print("__partition()")
 
         # set pivot to the last element
-        last = high.item
+        last = len(high.item) if type(high.item) == str else high.item
 
         # set i to the previous node of low (similar to i = -1)
         i = low.previous
@@ -287,7 +288,9 @@ class LinkedList:
         j = low
 
         while (j != high):
-            if j.item <= last:
+            j_item = len(j.item) if type(j.item) == str else j.item
+
+            if (j_item <= last and order == "asc") or (j_item >= last and order == "dec"):
 
                 i = low if i == None else i.next
 
