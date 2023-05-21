@@ -136,8 +136,9 @@ class LinkedList:
                 self.__head.previous = None
         
             self.__size -= 1
+        else:
+            raise EmptyListException()
 
-        return pop
     
 
     def drop(self):
@@ -154,6 +155,8 @@ class LinkedList:
                 self.__tail.next = None
         
             self.__size -= 1
+        else:
+            raise EmptyListException()
 
         return drop
 
@@ -162,19 +165,22 @@ class LinkedList:
         """
         Remove and return the given element.
         """
-        this_node = self.__head
-        remove = this_node.item
-
-        while remove != item:
-            this_node = this_node.next
+        if (not(self.isEmpty())):
+            this_node = self.__head
             remove = this_node.item
-            if this_node == None:
-                raise IndexError("List index is out of range!")
-            
-        previous_node = this_node.previous
-        next_node = this_node.next
-        previous_node.next = next_node
-        self.__size -= 1
+
+            while remove != item:
+                this_node = this_node.next
+                remove = this_node.item
+                if this_node == None:
+                    raise IndexError("List index is out of range!")
+                
+            previous_node = this_node.previous
+            next_node = this_node.next
+            previous_node.next = next_node
+            self.__size -= 1
+        else:
+            raise EmptyListException()
         
         return remove
 
@@ -229,8 +235,7 @@ class LinkedList:
     def equals(self, other_list) -> bool:
         """
         Compare linked list to another list
-        """
-        
+        """        
         if self.__size == other_list.__size:
             this_node = self.__head
             other_node = other_list.__head
@@ -245,3 +250,20 @@ class LinkedList:
             return True
         
         return False
+
+
+
+
+# ==================================================================================================
+#       Exceptions
+# ==================================================================================================
+
+class EmptyListException(Exception):
+    """
+    Raised when the list is found empty.
+    """
+    def __init__(self, message="This list is empty.") -> None:
+        self.message = message
+        super().__init__(self.message)
+
+    pass
