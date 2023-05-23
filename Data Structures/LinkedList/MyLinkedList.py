@@ -54,8 +54,9 @@ class LinkedList:
     `isEmpty()` - Returns `True` if the list is empty. Otherwise `False`.\n
     `equals(other_list)` - Compares this list with `other_list` and returns `True` if they are identical (order-dependent).\n
     `buildFrom(list)` - Generates a linked list from a built-in list.\n
-    `sort(order)` - Sort the list in ascending order by default. Set `order="dec"` to order in decending order.\n
-    `clone()` - Deep copy the entire list and return the copy.
+    `sort(order)` - Sorts the list in ascending order by default. Set `order="dec"` to order in decending order.\n
+    `clone()` - Deep copies the entire list and return the copy.\n
+    `sublist(start, end)` - Finds and returns a sublist from the `start` index to the `end` index.
     """
 
     def __init__(self):
@@ -316,6 +317,8 @@ class LinkedList:
         """
         Return a deep-copied head of the linked list.
         """
+        # Best case runtime - constant for when head is None
+        # Worst case runtinme - linear for any list size
         head = self.__head
 
         if head != None:
@@ -330,6 +333,34 @@ class LinkedList:
             raise EmptyListException()
         
         return nl
+    
+
+    def sublist(self, start:int, end:int):
+        """
+        Generate and return a sublist of the instance starting from the `start` index, finishing at `end` index.
+        """
+        if start < 0:
+            raise IndexError("Start index is below zero!")
+        if end >= self.__size:
+            raise IndexError("End index is out of list range!")
+
+
+        head = self.__head
+
+        if head != None:
+            ll = LinkedList()
+            node = head
+
+            for i in range(self.__size):
+                if i >= start and i <= end:
+                    ll.append(node.item)
+
+                node = node.next
+
+        else:
+            raise EmptyListException("Cannot get the sublist of an empty list!")
+        
+        return ll
 
 
 
