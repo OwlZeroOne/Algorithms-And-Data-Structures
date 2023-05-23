@@ -1,0 +1,9 @@
+__pycache__
+*.png
+*.md
+
+# Ignore tests
+tests.py
+
+# Ignore reused code
+_LinkedList.py
