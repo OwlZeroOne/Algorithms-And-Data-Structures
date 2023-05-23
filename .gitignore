@@ -4,6 +4,3 @@ __pycache__
 
 # Ignore tests
 tests.py
-
-# Ignore reused code
-_LinkedList.py
