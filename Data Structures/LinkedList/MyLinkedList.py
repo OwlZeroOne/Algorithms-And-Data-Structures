@@ -53,7 +53,9 @@ class LinkedList:
     `tail()` - Returns the tail element of the list.\n
     `isEmpty()` - Returns `True` if the list is empty. Otherwise `False`.\n
     `equals(other_list)` - Compares this list with `other_list` and returns `True` if they are identical (order-dependent).\n
-    `buildFrom(list)` - Generates a linked list from a built-in list.
+    `buildFrom(list)` - Generates a linked list from a built-in list.\n
+    `sort(order)` - Sort the list in ascending order by default. Set `order="dec"` to order in decending order.\n
+    `clone()` - Deep copy the entire list and return the copy.
     """
 
     def __init__(self):
