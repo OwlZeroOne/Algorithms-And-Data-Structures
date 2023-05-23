@@ -8,7 +8,7 @@ class Node:
     the `next` node. If `next` is null, then this node is the last on the list.
     """
 
-    def __init__(self, item, previous=None, next=None):
+    def __init__(self, item=None, previous=None, next=None):
         """
         Intilaize node with provided parameters:
         :param `item`: inferred type - item to be stored on the node.
@@ -308,6 +308,27 @@ class LinkedList:
         j.item = temp
         
         return i
+
+
+    def clone(self):
+        """
+        Return a deep-copied head of the linked list.
+        """
+        head = self.__head
+
+        if head != None:
+            nl = LinkedList()   # new list
+            node = head
+
+            while node != None:
+                nl.append(node.item)
+                node = node.next
+                
+        else:
+            raise EmptyListException()
+        
+        return nl
+
 
 
 # ==================================================================================================
