@@ -46,6 +46,13 @@ class Queue:
         """
         return self.__list.isEmpty()
     
+
+    def size(self):
+        """
+        Return the size of the queue.
+        """
+        return self.__list.size()
+    
     
     def toLinkedList(self) -> LinkedList:
         """
