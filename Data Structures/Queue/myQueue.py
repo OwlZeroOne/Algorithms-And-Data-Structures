@@ -10,6 +10,8 @@ class Queue:
     `toLinkedList()` - Return the linked list version of the queue.
     """
 
+    # RELATED TESTS
+    #   test_initializeQueue()
     def __init__(self):
         """
         Intialize the queue by creating a new linked list instance.
@@ -21,11 +23,20 @@ class Queue:
         return self.__list.__str__()
 
 
+    # RELATED TESTS
+    #   test_enqueueOne()
+    #   test_enqueueMany()
+    #   test_enqueueAndDequeue()
     def enqueue(self, item):
         self.__list.append(item)
         pass
 
 
+    # RELATED TESTS
+    #   test_dequeueOne()
+    #   test_dequeueMany()
+    #   test_dequeueFromAnEmptyList()
+    #   test_enqueueAndDequeue()
     def dequeue(self):
         """
         Pop and return the queue of the list.
@@ -33,6 +44,9 @@ class Queue:
         return self.__list.pop()
 
     
+    # RELATED TESTS
+    #   test_peekPopulatedQueue()
+    #   test_peekEmptyQueue()
     def peek(self):
         """
         Return the head of the queue without removing it.
@@ -40,6 +54,9 @@ class Queue:
         return self.__list.head()
 
 
+    # RELATED TESTS
+    #   test_populatedIsNotEmpty()
+    #   test_unpopulatedIsEmpty()
     def isEmpty(self):
         """
         Return `True` if the queue is empty. Otherwise, return `False`.
@@ -54,6 +71,8 @@ class Queue:
         return self.__list.size()
     
     
+    # RELATED TESTS
+    #   test_toLinkedList()
     def toLinkedList(self) -> LinkedList:
         """
         Return the linked list of the queue.
