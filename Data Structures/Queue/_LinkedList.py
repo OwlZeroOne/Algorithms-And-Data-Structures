@@ -18,6 +18,12 @@ class Node:
         self.previous = previous
         self.item = item
 
+        if not(previous == None):
+            previous.next = self
+
+        if not(next == None):
+            next.previous = self
+
 
     def __str__(self) -> str:
         """
@@ -59,6 +65,9 @@ class LinkedList:
     `sublist(start, end)` - Finds and returns a sublist from the `start` index to the `end` index.
     """
 
+    # RELATED TESTS
+    #   test_initializeList()
+    #   test_initialListSizeIsZero()
     def __init__(self):
         """
         Initialize empty list with empty head and empty tail.
@@ -85,7 +94,10 @@ class LinkedList:
 
         return str.format("[{}]", output)
 
-    
+    # RELATED TESTS
+    #   test_buildListOfTenNumbers()
+    #   test_buildListOfTenStrings()
+    #   test_buildEmptyList()
     def buildFrom(self, l:list):
         """
         Builds a singly linked list from the given built-in list.
@@ -94,6 +106,11 @@ class LinkedList:
             self.append(l[i])
 
 
+    # RELATED TESTS
+    #   test_AppendOne()
+    #   test_AppendMany()
+    #   test_alternateAppendAndPrepend()
+    #   test_AppendPrependPopAndDrop()
     def append(self, item):
         """
         Add item to the end of the list.
@@ -111,6 +128,11 @@ class LinkedList:
         self.__size += 1
 
 
+    # RELATED TESTS
+    #   test_prependOne()
+    #   test_prependMany()
+    #   test_alternateAppendAndPrepend()
+    #   test_AppendPrependPopAndDrop()
     def prepend(self, item):
         """
         Add item to the start of the list.
@@ -124,7 +146,12 @@ class LinkedList:
 
         self.__size += 1
 
-
+    # RELATED TESTS
+    #   test_popOne()
+    #   test_popMany()
+    #   test_popFromEmptyList()
+    #   test_alternatePopAndDrop()
+    #   test_AppendPrependPopAndDrop()
     def pop(self):
         """
         Remove and return the first element in the list.
@@ -141,9 +168,16 @@ class LinkedList:
             self.__size -= 1
         else:
             raise EmptyListException()
+        
+        return pop
 
     
-
+    # RELATED TESTS
+    #   test_dropOne()
+    #   test_dropMany()
+    #   test_dropFromEmptyList()
+    #   test_alternatePopAndDrop()
+    #   test_AppendPrependPopAndDrop()
     def drop(self):
         """
         Remove and return the last element in the list.
@@ -164,6 +198,11 @@ class LinkedList:
         return drop
 
     
+    # RELATED TESTS
+    #   test_removeItemAtGivenIndex()
+    #   test_removeNonExistentItemFromTheList()
+    #   test_removeElementAtValidIndex()
+    #   test_removeElmentAtInvalidIndex()
     def remove(self, item):
         """
         Remove and return the given element.
@@ -174,9 +213,9 @@ class LinkedList:
 
             while remove != item:
                 this_node = this_node.next
-                remove = this_node.item
                 if this_node == None:
-                    raise IndexError("List index is out of range!")
+                    raise RuntimeError("Element does not exist within the list!")
+                remove = this_node.item
                 
             previous_node = this_node.previous
             next_node = this_node.next
@@ -188,19 +227,32 @@ class LinkedList:
         return remove
 
 
+    # RELATED TESTS
+    #   test_getElementAtIndex()
+    #   test_getElementAtNegativeIndex()
+    #   test_getElementAtIndexEqualToSize()
+    #   test_getElementAtIndexGreaterThanSize()
+    #   test_removeElementAtValidIndex()
+    #   test_removeElmentAtInvalidIndex()
     def getAt(self, index: int) -> Node:
         """
         Return element at provided index.
         """
-        this_node = self.__head
+        if index >= 0 and index <= self.__size - 1:
+            this_node = self.__head
 
-        for i in range(index):
-            this_node = this_node.next
+            for i in range(index):
+                this_node = this_node.next
 
-        return this_node.item
+            return this_node.item
+        else:
+            raise IndexError("Index out of bounds!")
 
 
-    
+    # RELATED TESTS
+    #   test_popFromEmptyList()
+    #   test_dropFromEmtyList()
+    #   __listSate()
     def size(self):
         """
         Return the size of the list.
@@ -208,6 +260,15 @@ class LinkedList:
         return self.__size
     
 
+    # RELATED TESTS
+    #   test_initialListSizeIsZero()
+    #   test_appendOne()
+    #   test_appendMany()
+    #   test_appendStrings()
+    #   test_prependOne()
+    #   test_prependMany()
+    #   test_popOne()
+    #   test_popMany()
     def head(self):
         """
         Return the head element of the list.
@@ -218,6 +279,15 @@ class LinkedList:
         return self.__head.item
     
 
+    # RELATED TESTS
+    #   test_initialListSizeIsZero()
+    #   test_appendOne()
+    #   test_appendMany()
+    #   test_appendStrings()
+    #   test_prependOne()
+    #   test_prependMany()
+    #   test_dropOne()
+    #   test_dropMany()
     def tail(self):
         """
         Return the tail element of the list.
@@ -228,6 +298,9 @@ class LinkedList:
         return self.__tail.item
     
 
+    # RELATED TESTS
+    #   test_unpopulatedListIsEmpty()
+    #   test_populatedListIsNotEmpty()
     def isEmpty(self) -> bool:
         """
         Check if the list is empty. Return `True` if it is.
@@ -235,6 +308,10 @@ class LinkedList:
         return self.__size == 0
     
 
+    # RELATED TESTS:
+    #   test_CompareTheSameLists()
+    #   test_CompareDifferentLists()
+    #   test_CompareListsOfDifferentSizes()
     def equals(self, other_list) -> bool:
         """
         Compare linked list to another list
@@ -255,12 +332,23 @@ class LinkedList:
         return False
     
 
+    # --- SORT ---------------------------------------------------------------------------------------------------------------
+    
+    # RELATED TESTS
+    #   test_sortAscending()
+    #   test_sortDecending()
+    #   test_sortEmptyList()
+    #   test_sortSortedList()
+    #   test_sortInvalidOrder()
     def sort(self, order="asc"):
         """
         Sort the linked list using quick-sort algorithm. `sort()` will arrange list elements in ascending order by default, unless otherwise stated by `order="dec"`.\n
         For a list of strings, all strings will be arranged by their sizes.
         """
-        self.__quickSort(order)
+        if order == "asc" or order == "dec":
+            self.__quickSort(order)
+        else:
+            raise ValueError("Illegal sort order!")
 
 
     def __quickSort(self, order: str):
@@ -311,8 +399,12 @@ class LinkedList:
         j.item = temp
         
         return i
+    
+    # --- SORT ---------------------------------------------------------------------------------------------------------------
 
-
+    # RELATED TESTS
+    #   test_cloneUpopulatedList()
+    #   test_clonePrepopulatedList()
     def clone(self):
         """
         Return a deep-copied head of the linked list.
@@ -321,24 +413,28 @@ class LinkedList:
         # Worst case runtinme - linear for any list size
         head = self.__head
 
-        if head != None:
-            nl = LinkedList()   # new list
-            node = head
+        nl = LinkedList()   # new list
+        node = head
 
-            while node != None:
-                nl.append(node.item)
-                node = node.next
-                
-        else:
-            raise EmptyListException()
-        
+        while node != None:
+            nl.append(node.item)
+            node = node.next
+
         return nl
     
 
+    # Related Tests
+    #   test_getValidSublist()
+    #   test_getSublistFromNegativeToValidIndex()
+    #   test_getSublistFromValidToOutOfRangeIndex()
+    #   test_getSublistOfEmptyList()
+    #   test_getSublistOfAnotherSublist()
     def sublist(self, start:int, end:int):
         """
         Generate and return a sublist of the instance starting from the `start` index, finishing at `end` index.
         """
+        if start == 0 and end == 0 and self.__size == 0:
+            return LinkedList()
         if start < 0:
             raise IndexError("Start index is below zero!")
         if end >= self.__size:
