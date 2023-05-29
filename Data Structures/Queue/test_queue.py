@@ -85,7 +85,7 @@ class TestQueue(unittest.TestCase):
         self.assertEqual(str(self.q),"[24,28,32,36,40]")
 
 
-    def test_dequeueFromAnEmptyList(self):
+    def test_dequeueFromAnEmptyQueue(self):
         """
         Attempt to dequeue from an empty list. An `EmptyListException` should be thrown by the `LinkedList` module.
         """
