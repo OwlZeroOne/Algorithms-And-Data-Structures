@@ -121,7 +121,7 @@ class TestQueue(unittest.TestCase):
 
     def test_populatedIsNotEmpty(self):
         """
-        Check if a populated list is empty. The result should be `False`.
+        Check if a populated queue is empty. The result should be `False`.
         """
         self.q = TestQueue.sampleQueue(3)
 
@@ -130,14 +130,14 @@ class TestQueue(unittest.TestCase):
 
     def test_unpopulatedIsEmpty(self):
         """
-        Check if an unpopulated list is empty. The result should be `True`.
+        Check if an unpopulated queue is empty. The result should be `True`.
         """
         self.assertTrue(self.q.isEmpty())
 
 
     def test_toLinkedList(self):
         """
-        Attempt to convert the que to a `LinkedList`. The result should be a linked list of the same size as the `Queue`, with `head()` the same as `peek()`.
+        Attempt to convert the queue to a `LinkedList`. The result should be a linked list of the same size as the `Queue`, with `head()` the same as `peek()`.
         """
         self.q = TestQueue.sampleQueue(2)
         ll = self.q.toLinkedList()
