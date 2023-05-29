@@ -7,6 +7,7 @@ class Stack:
     `drop()` - Drop the tail of the stack.\n
     `peek()` - Return the tail of the stack without removing it.\n
     `isEmpty()` - Check if the stack is empty.\n
+    `size()` - Return current size of the stack.\n
     `toLinkedList()` - Return the linked list version of the stack.
     """
 
@@ -47,6 +48,13 @@ class Stack:
         Return `True` if the queue is empty. Otherwise, return `False`.
         """
         return self.__list.isEmpty()
+    
+
+    def size(self):
+        """
+        Return the size of the stack.
+        """
+        return self.__list.size()
     
 
     def toLinkedList(self) -> LinkedList:
