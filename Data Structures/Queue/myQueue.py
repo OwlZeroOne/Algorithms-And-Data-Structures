@@ -7,6 +7,7 @@ class Queue:
     `dequeue()` - Pop the head of the queue.\n
     `peek()` - Return the head of the queue without removing it.\n
     `isEmpty()` - Check if the queue is empty.\n
+    `size()` - Return current size of the queue.\n
     `toLinkedList()` - Return the linked list version of the queue.
     """
 
