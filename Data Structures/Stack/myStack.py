@@ -11,6 +11,8 @@ class Stack:
     `toLinkedList()` - Return the linked list version of the stack.
     """
 
+    # RELATED TESTS
+    #   test_initializeStack()
     def __init__(self) -> None:
         """
         Initialize the stack by creating a new linked list instance.
@@ -22,6 +24,10 @@ class Stack:
         return self.__list.__str__()
 
 
+    # RELATED TESTS
+    #   test_appendOne()
+    #   test_appendMany()
+    #   test_appendAndDrop()
     def append(self, item):
         """
         Add new `item` onto the stack.
@@ -29,6 +35,11 @@ class Stack:
         self.__list.append(item)
 
 
+    # RELATED TESTS
+    #   test_dropOne()
+    #   test_dropMany()
+    #   test_dropFromAnEmptyList()
+    #   test_appendAndDrop()
     def drop(self):
         """
         Remove and return the tail from the stack.
@@ -36,6 +47,9 @@ class Stack:
         return self.__list.drop()
 
 
+    # RELATED TESTS
+    #   test_peekPopulatedStack()
+    #   test_peekEmptyStack()
     def peek(self):
         """
         Return the tail of the stack without removing it.
@@ -43,9 +57,12 @@ class Stack:
         return self.__list.tail()
 
 
+    # RELATED TESTS
+    #   test_populatedIsNotEmpty()
+    #   test_unpopulatedIsEmpty()
     def isEmpty(self):
         """
-        Return `True` if the queue is empty. Otherwise, return `False`.
+        Return `True` if the stack is empty. Otherwise, return `False`.
         """
         return self.__list.isEmpty()
     
@@ -57,6 +74,8 @@ class Stack:
         return self.__list.size()
     
 
+    # RELATED TESTS
+    #   test_toLinkedList()
     def toLinkedList(self) -> LinkedList:
         """
         Return the linked list of the queue.
