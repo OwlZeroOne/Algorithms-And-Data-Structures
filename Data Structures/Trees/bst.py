@@ -1,58 +1,48 @@
-class Node:
+from binaryTree import BinaryTree
+from nodes import BinaryNode
 
-    def __init__(self, parent, key):
-        self.parent = parent
-        self.key = key
-        self.left = self.right = None
-
-
-class BinarySearchTree:
+class BinarySearchTree(BinaryTree):
     """
-    The binary search tree is a non-balanced binary tree that is organized in such a way that the left children of each node have smaller values than the node, while right children have greate values. The current implementation supports;\n
-    `insert(key)` - insert `key` into the tree with respect to the binary-search-try property.\n
-    `search(key)` - perform a traversal on the tree to find the given `key`.\n
-    `delete(key)` - remove given `key` from the tree by performing a search traversal and node rearrangement.\n
-    `minimum()` - return the minumum value of the tree.\n
-    `maximum()` - return the maximum value of the tree.\n
-    `treeWalk(order)` - print the tree using the `inorder`, `preorder` or `postorder` setting.
+    A Binary Search Tree (BST) is a binary tree that satisfies the following properties:
+    - Left children contain keys lesser than parents'.
+    - Right children contain keys greater than parents'.
+    - Every subtree is also a BST.
     """
+    
+    N = BinaryNode
+    # RELATED TESTS
+    #   TestBinarySearchTree.test_initialState()
+    def __init__(self, maxSize):
+        super().__init__(maxSize)
+        
 
     # RELATED TESTS
-    #   test_initialState()
-    def __init__(self):
-        self.root = None
-        self._size = 0
-
-
-    # RELATED TESTS
-    #   test_insertOne()
-    #   test_insertThree()
-    #   test_insertTen()
+    #   TestBinarySearchTree.setUp()
     def insert(self, key) -> None:
         
         if self.root == None:
-            self.root = Node(None, key)
+            self.root = BinaryNode(key, None)
         else:
-            self.__newNode(self.root, key)
+            self.__insert(self.root, key)
 
-        self._size += 1
+        self.size += 1
 
 
-    def __newNode(self, node: Node, key):
+    def __insert(self, node:N, key):
 
         if node.key == key:
             raise ValueError("Key already present...")
         
         elif key < node.key:
             if node.left == None:
-                node.left = Node(node, key)
+                node.left = BinaryNode(key, node)
             else:
-                self.__newNode(node.left, key)
+                self.__insert(node.left, key)
         else:
             if node.right == None:
-                node.right = Node(node, key)
+                node.right = BinaryNode(key, node)
             else:
-                self.__newNode(node.right, key)
+                self.__insert(node.right, key)
 
 
     # RELATED TESTS
@@ -62,30 +52,31 @@ class BinarySearchTree:
     #   test_deleteMany()
     #   test_deleteNonExistentNode()
     #   test_deleteNodeFromAnEmptyTree()
-    def delete(self, j):
+    def delete(self, key):
 
         if not(self.isEmpty()):
-            target:Node = self.lookup(j)
-            parent:Node = target.parent
+            target:BinaryNode = self.lookup(key)
+            parent:BinaryNode = target.parent
             
             # Target has no children
             if target.left == None and target.right == None:
                 self.__deleteWithNoChildren(target, parent)
             
+            # Target has two children
+            elif target.left != None and target.right != None:
+                self.__deleteWithTwoChildren(target, parent)
+
             # Target has one child
-            elif self._XOR(target.left != None, target.right != None):
+            else:
                 self.__deleteWithOneChild(target, parent)
                 
-            # Target has two children
-            else:
-                self.__deleteWithTwoChildren(target, parent)
         else:
             raise RuntimeError("Tree is empty!")
 
-        self._size -= 1
+        self.size -= 1
             
 
-    def __deleteWithNoChildren(self, target:Node, parent:Node):
+    def __deleteWithNoChildren(self, target:N, parent:N):
 
         if parent.left == target:
             parent.left = None
@@ -97,7 +88,7 @@ class BinarySearchTree:
             raise RuntimeError("Unexpected error!")
             
 
-    def __deleteWithOneChild(self, target:Node, parent:Node):
+    def __deleteWithOneChild(self, target:N, parent:N):
         
         child = target.left if target.left != None else target.right
 
@@ -111,7 +102,7 @@ class BinarySearchTree:
             raise RuntimeError("Unexpected error!")
 
 
-    def __deleteWithTwoChildren(self, target:Node, parent:Node):
+    def __deleteWithTwoChildren(self, target:N, parent:N):
         ldor = self.__leftmostDecendentOf(target.right)
         ldor_parent = ldor.parent
         target.key = ldor.key
@@ -125,7 +116,7 @@ class BinarySearchTree:
             self.__deleteWithOneChild(ldor, ldor_parent)
 
 
-    def __leftmostDecendentOf(self, node:Node):
+    def __leftmostDecendentOf(self, node:N):
         
         if node.left != None:
             return self.__leftmostDecendentOf(node.left)
@@ -135,11 +126,11 @@ class BinarySearchTree:
     # RELATED TESTS
     #   test_validLookup()
     #   test_invalidLookup()
-    def lookup(self, key) -> Node:
+    def lookup(self, key) -> N:
         return self.__lookup(self.root, key)
 
 
-    def __lookup(self, node: Node, find) -> bool:
+    def __lookup(self, node: N, find) -> bool:
         
         if node == None:
             raise RuntimeError("Could not find element...")
@@ -155,14 +146,14 @@ class BinarySearchTree:
         
     # RELATED TESTS
     #   test_findMaximum()
-    def maximum(self) -> Node:
+    def maximum(self) -> N:
         """
         Return the maximum key in the tree.
         """
         return self.__max(self.root)
     
 
-    def __max(self, node:Node) -> Node:
+    def __max(self, node:N) -> N:
         
         if node.right != None:
             return self.__max(node.right)
@@ -172,106 +163,23 @@ class BinarySearchTree:
 
     # RELATED TESTS
     #   test_findMinimum()
-    def minimum(self) -> Node:
+    def minimum(self) -> N:
         """
         Return the minimum key in the tree.
         """
         return self.__min(self.root)
     
 
-    def __min(self, node:Node) -> Node:
+    def __min(self, node:N) -> N:
         
         if node.left != None:
             return self.__min(node.left)
         else:
             return node
-        
-
-    # RELATED TESTS
-    #   test_initialState()
-    #   test_insertOne()
-    #   test_insertThree()
-    #   test_insertTen()
-    def toString(self, order="inorder") -> str:
-        """
-        Print tree keys in one of the following orders:\n
-        `"inorder"` - print root nodes between left and right subtrees (default).\n
-        `"preorder"` - print root nodes before left and right subtrees.\n
-        `"postorder"` - print root nodes after left and right subtrees.
-        """
-        if self.root != None:
-            if order == "inorder":
-                return "["+self.__inorderTreeWalk(self.root)+"]"
-
-            elif order == "preorder":
-                return "["+self.__preorderTreeWalk(self.root)+"]"
-
-            elif order == "postorder":
-                return "["+self.__postorderTreeWalk(self.root)+"]"
-
-            else:
-                raise ValueError("Unexpected order parameter!")
-        else:
-            return "[]"
-        
-
-    def toList(self, order="inorder"):
-        """
-        Convert the tree to a list in provided order:\n
-        `"inorder"` - root nodes between left and right subtrees (default).\n
-        `"preorder"` - root nodes before left and right subtrees.\n
-        `"postorder"` - root nodes after left and right subtrees.
-        """
-        pass
-        
-    # TODO Have treewalks return a list to toList(). If print required, send to toString().
-    
-    def __inorderTreeWalk(self, node:Node):
-        """
-        Print tree keys with root nodes being printed between left and right child nodes/subtrees.
-        """
-        if node != None:
-            return str.format("{}{}{}",
-                              self.__inorderTreeWalk(node.left) + "," if node.left != None else "",
-                              node.key,
-                              ("," if node.right != None else "") + self.__inorderTreeWalk(node.right))
-        else:
-            return ""
-            
-
-
-    def __preorderTreeWalk(self, node:Node):
-        """
-        Print tree keys with root nodes being printed before left and right child nodes/subtrees.
-        """
-        if node != None:
-            return str.format("{}{}{}",
-                              node.key,
-                              ("," if node.left != None else "") + self.__preorderTreeWalk(node.left),
-                              ("," if node.right != None else "") + self.__preorderTreeWalk(node.right))
-        else:
-            return ""
-
-
-    def __postorderTreeWalk(self, node:Node):
-        """
-        Print tree keys with root nodes being printed after left and right child nodes/subtrees.
-        """
-        if node != None:
-            return str.format("{}{}{}",
-                              self.__postorderTreeWalk(node.left) + "," if node.left != None else "",
-                              self.__postorderTreeWalk(node.right) + "," if node.right != None else "",
-                              node.key)
-        else:
-            return ""
-
-
-    def size(self):
-        return self._size
     
 
     def isEmpty(self) -> bool:
-        return self._size == 0
+        return self.size == 0
     
 
     def _XOR(self, a, b) -> bool:
