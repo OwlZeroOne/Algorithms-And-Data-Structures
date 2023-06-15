@@ -1,5 +1,6 @@
 import unittest
 import binaryTree as bt
+import bst
 
 class TestBinaryTree(unittest.TestCase):
     """
@@ -466,8 +467,6 @@ class TestBinaryTree(unittest.TestCase):
             bt.depthOf(9)
 
 
-import bst
-
 class TestBinarySearchTree(unittest.TestCase):
     # This test works with the following tree:
     #
@@ -627,7 +626,69 @@ class TestBinarySearchTree(unittest.TestCase):
         """
         tree = self.bst
         with self.assertRaises(RuntimeError):
-            bst.delete(4)
+            tree.delete(4)
+
+
+    def test_validLookup(self):
+        """
+        Search for a node that exists within the list. Test on four different cases that exist within the tree.
+        """
+        t1 = 33
+        t2 = 76
+        t3 = 47
+        t4 = 10
+
+        bst = self.bst
+        node = bst.lookup(t1)
+        self.assertEqual(node.key, t1)
+
+        node = bst.lookup(t2)
+        self.assertEqual(node.key, t2)
+
+        node = bst.lookup(t3)
+        self.assertEqual(node.key, t3)
+
+        node = bst.lookup(t4)
+        self.assertEqual(node.key, t4)
+
+
+    def test_invalidLookup(self):
+        """
+        Attempt to find a node that does not exist within the tree. Should throw a `RuntimeError` exception.
+        """
+        t = 4
+        bst = self.bst
+        
+        with self.assertRaises(RuntimeError):
+            bst.lookup(t)
+
+
+    def test_findMaximum(self):
+        """
+        Find and return the node with the greatest key.
+        """
+        bst = self.bst
+        max = bst.maximum()
+
+        self.assertEqual(max.key, 90)
+
+
+    def test_findMinimum(self):
+        """
+        Find and return the node with the smallest key.
+        """
+        bst = self.bst
+        min = bst.minimum()
+
+        self.assertEqual(min.key, 10)
+
+
+    def test_deleteNodeFromAnEmptyTree(self):
+        """
+        Attempt to remove a node from an empty tree. A `RuntimeError` exception should be thrown.
+        """
+        with self.assertRaises(RuntimeError):
+            self.bst.delete(45)
 
 
 class TestAVL(unittest.TestCase):
