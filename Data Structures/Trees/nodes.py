@@ -6,6 +6,10 @@ class Node:
         self.key = key
         self.parent = parent
 
+    
+    def __str__(self) -> str:
+        return str(self.key)
+
 
 class BinaryNode(Node):
 

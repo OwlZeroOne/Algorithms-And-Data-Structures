@@ -1,6 +1,7 @@
 import unittest
 import binaryTree as bt
-import bst
+import binarySearchTree as bst
+import avlTree as avl
 
 class TestBinaryTree(unittest.TestCase):
     """
@@ -389,12 +390,12 @@ class TestBinaryTree(unittest.TestCase):
         tree.insert(14,12)
         tree.insert(15,14)
 
-        self.assertEqual(tree.heightOf(1), 7)
-        self.assertEqual(tree.heightOf(2), 1)
-        self.assertEqual(tree.heightOf(6), 5)
-        self.assertEqual(tree.heightOf(9), 0)
-        self.assertEqual(tree.heightOf(13), 0)
-        self.assertEqual(tree.heightOf(14), 1)
+        self.assertEqual(tree.heightOfKey(1), 7)
+        self.assertEqual(tree.heightOfKey(2), 1)
+        self.assertEqual(tree.heightOfKey(6), 5)
+        self.assertEqual(tree.heightOfKey(9), 0)
+        self.assertEqual(tree.heightOfKey(13), 0)
+        self.assertEqual(tree.heightOfKey(14), 1)
 
 
     def test_heightOfNonExistentNode(self):
@@ -407,7 +408,7 @@ class TestBinaryTree(unittest.TestCase):
         bt.insert(5, 3)
 
         with self.assertRaises(LookupError):
-            bt.heightOf(7)
+            bt.heightOfKey(7)
 
 
     def test_depthOfNode(self):
@@ -691,9 +692,336 @@ class TestBinarySearchTree(unittest.TestCase):
             self.bst.delete(45)
 
 
-class TestAVL(unittest.TestCase):
-    pass
+    def test_orderWalks(self):
+        """
+        Check whether the different walks output appropriate lists.
+        """
+        # Test tree:
+        #         _8_
+        #        /   \
+        #       5     10
+        #      / \    / 
+        #     4   6  9
+        #    /
+        #   2
+        #  / \
+        # 1   3
+        tree = bst.BinarySearchTree(10)
+        tree.insert(8)
+        tree.insert(5)
+        tree.insert(10)
+        tree.insert(4)
+        tree.insert(6)
+        tree.insert(9)
+        tree.insert(2)
+        tree.insert(1)
+        tree.insert(3)
 
+        self.assertEqual(tree.toList("inorder"), [1,2,3,4,5,6,8,9,10])
+        self.assertEqual(tree.toList("preorder"), [8,5,4,2,1,3,6,10,9])
+        self.assertEqual(tree.toList("postorder"), [1,3,2,4,6,5,9,10,8])
+
+
+    def test_unbalancedTree(self):
+        """
+        Test an unbalanced tree to see if it is unbalanced or not.
+        """
+        # Test tree:
+        #         _8_
+        #        /   \
+        #       5     10
+        #      / \    / 
+        #     4   6  9
+        #    /
+        #   2
+        #  / \
+        # 1   3
+
+        tree = bst.BinarySearchTree(10)
+        tree.insert(8)
+        tree.insert(5)
+        tree.insert(10)
+        tree.insert(4)
+        tree.insert(6)
+        tree.insert(9)
+        tree.insert(2)
+        tree.insert(1)
+        tree.insert(3)
+
+        self.assertFalse(tree.isBalanced())
+
+
+    def test_balancedTree(self) -> bool:
+        """
+        Test a balanced tree to see if it is unbalanced or not.
+        """
+        # Test tree:
+        #         _7_
+        #        /   \
+        #       5     10
+        #      / \    / \
+        #     3   6  9   11
+        #    /      /
+        #   2      8 
+        #  /
+        # 1
+        tree = bst.BinarySearchTree(10)
+        tree.insert(7)
+        tree.insert(5)
+        tree.insert(10)
+        tree.insert(3)
+        tree.insert(6)
+        tree.insert(9)
+        tree.insert(11)
+        tree.insert(8)
+        tree.insert(2)
+        tree.insert(1)
+
+        self.assertTrue(tree.isBalanced())
+
+
+    def test_perfectlyBalancedTree(self):
+        """
+        Test a perfectly balanced tree to see if it is indeed blanaced perfectly or not.
+        """
+        #TODO
+        pass
+
+
+class TestAVL(unittest.TestCase):
+    
+    def setUp(self) -> None:
+        self.tree = avl.AvlTree(15)
+
+
+    def test_initialize(self):
+        """
+        Test initial state of an empty AVL tree. SHould be empty with size 0.
+        """
+        t = self.tree
+        self.assertEqual(t.size, 0)
+        self.assertTrue(t.isEmpty())
+        self.assertTrue(t.isBalanced())
+        self.assertEqual(t.height(), 0)
+
+
+    def test_addOne(self):
+        """
+        Add one element into the tree. The element should become the root, and the tree should be balanced and not empty.
+        """
+        t = self.tree
+        t.insert(56)
+        self.assertEqual(t.size, 1)
+        self.assertFalse(t.isEmpty())
+        self.assertTrue(t.isBalanced())
+        self.assertEqual(t.height(), 0) # No edges in the tree, hence height is zero.
+        self.assertEqual(t.root.key, 56)
+
+
+    def test_simpleRightRotation(self):
+        """
+        Populate the tree with three nodes containing the following keys respectively: 73,71,67. This will test the right rotation algorithm for right skewed trees. Output of preorder list should be `[71,67,73]`.
+        """
+        # TREE REPRESENTATION
+        #
+        #       73      ->         71
+        #      /                  /  \
+        #    71         ->      67    73
+        #   /
+        # 67            ->
+        t = self.tree
+        t.insert(73)
+        t.insert(71)
+        t.insert(67)
+
+        self.assertEqual(t.size, 3)
+        self.assertEqual(t.toList("preorder"), [71,67,73])
+        self.assertTrue(t.isBalanced())
+        self.assertEqual(t.height(), 1)
+
+
+    def test_simpleLeftRotation(self):
+        """
+        Populate the tree with three nodes containing the following keys respectively: 84,87,88. This will test the left rotation algorithm for left skewed trees. Output of preorder list should be `[87,84,88]`.
+        """
+        # TREE REPRESENTATION
+        #
+        # 84            ->         87
+        #   \                     /  \
+        #    87         ->      84    88
+        #      \
+        #       88      ->
+        t = self.tree
+        t.insert(84)
+        t.insert(87)
+        t.insert(88)
+
+        self.assertEqual(t.size, 3)
+        self.assertEqual(t.toList("preorder"), [87,84,88])
+        self.assertTrue(t.isBalanced())
+        self.assertEqual(t.height(), 1)
+
+
+    def test_simpleLeftRightRotation(self):
+        """
+        Populate the tree with three nodes containing the following keys respectively: 73,71,72. This will test the left-right rotation algorithm for "left-arrow" trees. Output of preorder list should be `[71,67,73]`.
+        """
+        # TREE REPRESENTATION
+        #
+        #    73      ->         72
+        #   /                  /  \
+        # 71         ->      71    73
+        #   \
+        #    72      ->
+        t = self.tree
+        t.insert(73)
+        t.insert(71)
+        t.insert(72)
+
+        self.assertEqual(t.size, 3)
+        self.assertEqual(t.toList("preorder"), [72,71,73])
+        self.assertTrue(t.isBalanced())
+        self.assertEqual(t.height(), 1)
+
+
+    def test_simpleRightLeftRotation(self):
+        """
+        Populate the tree with three nodes containing the following keys respectively: 84,87,86. This will test the right-left rotation algorithm for "right-arrow" trees. Output of preorder list should be `[86,84,87]`.
+        """
+        # TREE REPRESENTATION
+        #
+        # 84            ->         86
+        #   \                     /  \
+        #    87         ->      84    87
+        #   /
+        # 86            ->
+        t = self.tree
+        t.insert(84)
+        t.insert(87)
+        t.insert(86)
+
+        self.assertEqual(t.size, 3)
+        self.assertEqual(t.toList("preorder"), [86,84,87])
+        self.assertTrue(t.isBalanced())
+        self.assertEqual(t.height(), 1)
+
+
+    def test_rightRotationOnLargeTree(self):
+        # TREE REPRESENTATION
+        #
+        #          _95_             ->
+        #         /    \
+        #       83      97          ->            __83__
+        #      /  \    /  \                      /      \
+        #    64    84 93  99        ->         64       _95_
+        #   /  \     \                        /  \     /    \  
+        # 59    73    88            ->       59  73   84    97
+        #      /                                 /     \   /  \ 
+        #    71                     ->         71      88 93  99
+        t = self.tree
+        t.insert(95)
+        t.insert(83)
+        t.insert(97)
+        t.insert(64)
+        t.insert(84)
+        t.insert(96)
+        t.insert(99)
+        t.insert(59)
+        t.insert(73)
+        t.insert(88)
+        t.insert(71)
+
+
+        self.assertEqual(t.size, 11)
+        self.assertEqual(t.toList("preorder"), [83,64,59,73,71,95,84,88,97,96,99])
+        self.assertTrue(t.isBalanced())
+        self.assertEqual(t.height(), 3)
+
+
+    def test_leftRotationOnLargeTree(self):
+        # TREE REPRESENTATION
+        #
+        #          _90_             ->              _97_
+        #         /    \                           /    \
+        #       83      97          ->           90      100
+        #      /  \    /  \                     /  \    /   \
+        #     64  84  96  100       ->        83    96  99   101
+        #            /   /  \                /  \   /    /
+        #          95  99    101    ->      64  84  95  98
+        #             /                  
+        #            98             -> 
+        t = self.tree
+        t.insert(90)
+        t.insert(83)
+        t.insert(97)
+        t.insert(64)
+        t.insert(84)
+        t.insert(96)
+        t.insert(100)
+        t.insert(95)
+        t.insert(99)
+        t.insert(101)
+        t.insert(98)
+
+
+        self.assertEqual(t.size, 11)
+        self.assertEqual(t.toList("preorder"), [97,90,83,64,84,96,95,100,99,98,101])
+        self.assertTrue(t.isBalanced())
+        self.assertEqual(t.height(), 3)
+
+
+    def test_leftRightRotationOnLargeTree(self):
+        # TREE REPRESENTATION
+        #
+        #         54            ->               49
+        #        /  \                           /  \
+        #      41    55         ->            41    54
+        #     /  \     \                     / \    / \
+        #    38  49     56      ->         38   46 52  55
+        #   /   /  \                      /      \       \
+        # 36   46  52           ->      36       47       56
+        #       \
+        #        47             ->
+        t = self.tree
+        t.insert(54)
+        t.insert(41)
+        t.insert(55)
+        t.insert(38)
+        t.insert(49)
+        t.insert(56)
+        t.insert(36)
+        t.insert(46)
+        t.insert(52)
+        t.insert(47)
+
+        self.assertEqual(t.size, 10)
+        self.assertEqual(t.toList("preorder"), [49,41,38,36,46,47,54,52,55,56])
+        self.assertTrue(t.isBalanced())
+        self.assertEqual(t.height(), 3)
+
+
+    def test_rightLeftRotationOnLargeTree(self):
+        # TREE REPRESENTATION
+        #
+        #   3           ->          4
+        #  / \                     / \
+        # 2   7         ->        3   7
+        #    / \                 /   / \
+        #   4   8       ->      2   6   8
+        #    \
+        #     6         ->
+        t = self.tree
+        t.insert(3)
+        t.insert(2)
+        t.insert(7)
+        t.insert(4)
+        t.insert(8)
+        t.insert(6)
+
+        self.assertEqual(t.size, 6)
+        self.assertEqual(t.toList("preorder"), [4,3,2,7,6,8])
+        self.assertTrue(t.isBalanced())
+        self.assertEqual(t.height(), 2)
 
 class TestHeap(unittest.TestCase):
     pass

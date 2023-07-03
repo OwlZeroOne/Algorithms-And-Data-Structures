@@ -1,7 +1,6 @@
 from nodes import BinaryNode
 from treeInterface import TreeInterface
 from _myQueue import Queue
-from _myStack import Stack
 
 class BinaryTree(TreeInterface):
 
@@ -24,7 +23,7 @@ class BinaryTree(TreeInterface):
     #   TestBinaryTree.test_insertExistingKey()
     #   TestBinaryTree.test_insertToFullTree()
     #   TestBinaryTree.test_differentFullTrees()
-    def insert(self, key, parentKey=None) -> None:
+    def insert(self, key, parentKey=None) -> BinaryNode:
         """
         Insert a new `key` to a parent node of `parentKey` if it does not yet exist within the tree. Keys are added from left to right for each parent node. If the parent already has two children, a `ValueError` is raised.
         """
@@ -35,12 +34,14 @@ class BinaryTree(TreeInterface):
             # Check if tree is full or not.
             if self.size < self.maxSize:
 
+                newChild = BinaryNode(key, None)
+
                 # Ensure that parent key is `None` if there is no root node.
                 if self.root == None:
                     if parentKey != None:
                         raise ValueError("Root has no parents!")
                     
-                    self.root = BinaryNode(key, None)
+                    self.root = newChild
                     self.size += 1
                 else:
                     # Ensure that parent key is present.
@@ -48,15 +49,16 @@ class BinaryTree(TreeInterface):
                         raise ValueError("Parent key must be provided for trees with more than one node!")
                         
                     parent:BinaryNode = self.lookup(parentKey)
+                    newChild.parent = parent
 
                     # Check whether parent exists.
                     if parent != None:
                         if parent.left == None:
-                            parent.left = BinaryNode(key, parent)
+                            parent.left = newChild
                             self.size += 1
 
                         elif parent.right == None:
-                            parent.right = BinaryNode(key, parent)
+                            parent.right = newChild
                             self.size += 1
 
                         else:
@@ -64,9 +66,83 @@ class BinaryTree(TreeInterface):
                     else:
                         raise LookupError("This parent does not exist!")
             else:
-                raise OverflowError("The binary tree is full!")
+                raise OverflowError("The binary tree is full!")    
         else:
             raise LookupError("Node with this key already exists!")
+        
+        return newChild
+    
+
+    def isBalanced(self) -> bool:
+        """
+        Check if the tree is balanced using the balanced factor `bf`. A tree is balanced when -1 <= `bf` <= 1.
+        """
+        bf = self._balanceFactor(self.root)
+        return bf >= -1 and bf <= 1
+        
+
+    def _balanceFactor(self, node:N):
+        
+        if node != None:
+            left:BinaryNode = node.left
+            right:BinaryNode = node.right
+
+            lh = rh = 0
+
+            if left != None:
+                lh = self.heightOfNode(left) + 1
+
+            if right != None:
+                rh = self.heightOfNode(right) + 1
+
+            return lh - rh
+        else:
+            return 0
+    
+
+    def heightOfKey(self, key) -> int: 
+        """
+        Evaluate the height of a `node` given a particular `key`.
+        """
+        target:BinaryNode = self.lookup(key)
+        if target == None:
+            raise LookupError("Node with given key not found!")
+
+        return self.heightOfNode(target)
+    
+
+    # RELATED TESTS
+    #   test_heightOfNode()
+    def heightOfNode(self, target:N) -> int:
+        """
+        Calculate the height of the `target` node provided.
+        """
+        return self.__height(target)
+        
+
+    # RELATED TESTS
+    #   test_heightOfEmptyTree()
+    #   test_treeHeight()
+    def height(self) -> int:
+        """
+        Recursively evaluate the height of the tree by taking the maximum height of each subtree.
+        """
+        if not(self.isEmpty()):
+            # Execute recursive function.
+            return self.__height(self.root)
+        else:
+            return 0
+
+
+    def __height(self, src:N, counter=-1):
+
+        if src != None:
+            counter += 1
+            return max(
+                self.__height(src.left, counter),
+                self.__height(src.right, counter))
+        else:
+            return counter
     
     
     # RELATED TESTS
@@ -162,44 +238,6 @@ class BinaryTree(TreeInterface):
 
         else:
             raise LookupError("Key node not found!")
-
-
-    # RELATED TESTS
-    #   test_heightOfNode()
-    def heightOf(self, key) -> int:
-        """
-        Recursively evaluate the height of the key node by taking the maximum heuight of each subtree.
-        """
-        target:BinaryNode = self.lookup(key)
-        if target != None:
-            return self.__height(target)
-        else:
-            raise LookupError("This key does not exist!")
-        
-
-    # RELATED TESTS
-    #   test_heightOfEmptyTree()
-    #   test_treeHeight()
-    def height(self) -> int:
-        """
-        Recursively evaluate the height of the tree by taking the maximum height of each subtree.
-        """
-        if not(self.isEmpty()):
-            # Execute recursive function.
-            return self.__height(self.root)
-        else:
-            return 0
-
-
-    def __height(self, src:N, counter=-1):
-
-        if src != None:
-            counter += 1
-            return max(
-                self.__height(src.left, counter),
-                self.__height(src.right, counter))
-        else:
-            return counter
     
 
     def isEmpty(self) -> bool:
@@ -246,8 +284,8 @@ class BinaryTree(TreeInterface):
         """
         if node != None:
             left = [node.key]
-            mid = self._inorderWalk(node.left)
-            right = self._inorderWalk(node.right)
+            mid = self._preorderWalk(node.left)
+            right = self._preorderWalk(node.right)
 
             return left + mid + right
         else:
@@ -259,8 +297,8 @@ class BinaryTree(TreeInterface):
         Order tree elements such that descendants have presedence over their subtree roots.
         """
         if node != None:
-            left = self._inorderWalk(node.left)
-            mid = self._inorderWalk(node.right)
+            left = self._postorderWalk(node.left)
+            mid = self._postorderWalk(node.right)
             right = [node.key]
 
             return left + mid + right
